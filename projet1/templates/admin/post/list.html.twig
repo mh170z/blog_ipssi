@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Manage Posts - Admin{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="bi bi-file-text"></i> Manage Posts
+            </h1>
+            <a href="{{ path('app_admin_post_new') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Post
+            </a>
+        </div>
+
+        {% if posts|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><i class="bi bi-hash"></i> ID</th>
+                            <th><i class="bi bi-bookmark"></i> Title</th>
+                            <th><i class="bi bi-folder"></i> Category</th>
+                            <th><i class="bi bi-person"></i> Author</th>
+                            <th><i class="bi bi-calendar"></i> Published</th>
+                            <th><i class="bi bi-chat-dots"></i> Comments</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                            <tr>
+                                <td><strong>#{{ post.id }}</strong></td>
+                                <td>{{ post.title }}</td>
+                                <td><span class="badge bg-info">{{ post.category.name }}</span></td>
+                                <td>{{ post.author.firstName }} {{ post.author.lastName }}</td>
+                                <td>{{ post.publishedAt.format('d/m/Y') }}</td>
+                                <td><span class="badge bg-secondary">{{ post.comments|length }}</span></td>
+                                <td>
+                                    <a href="{{ path('app_post_detail', {id: post.id}) }}" class="btn btn-sm btn-info" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_admin_post_edit', {id: post.id}) }}" class="btn btn-sm btn-warning" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="POST" action="{{ path('app_admin_post_delete', {id: post.id}) }}" style="display: inline;" onsubmit="return confirm('Delete this post?');">
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                <i class="bi bi-info-circle"></i> No posts found. <a href="{{ path('app_admin_post_new') }}">Create your first post</a>.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
